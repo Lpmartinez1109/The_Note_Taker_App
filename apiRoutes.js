@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const store = require("./store");
+var fs = require("fs");
 
 function Router() {
     router.get("/notes", function (req, res) {

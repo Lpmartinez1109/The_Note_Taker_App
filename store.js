@@ -12,7 +12,7 @@ class Store{
         return readFileAsync("db/db.json", "utf-8")
     }
     write(note){
-        return writeFileAsync("db/db.json", JSON.stringify(note));
+        return writeFileAsync("db/db.json", "utf-8");
     }
     getNotes(){
         return this.read().then(notes => {
