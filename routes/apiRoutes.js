@@ -1,8 +1,6 @@
 const router = require("express").Router();
 const store = require("./store");
-var fs = require("fs");
 
-function Router() {
     router.get("/notes", function (req, res) {
         store
             .getNotes()
@@ -24,6 +22,5 @@ function Router() {
             .deleteNotes(req.body, id)
             .then((note) => res.json(note))
             .catch(err => res.status(500).json(err));
-    })
-}
-module.exports = Router;
+    });
+module.exports = router;
