@@ -1,18 +1,15 @@
 const util = require("util");
 const fs = require("fs");
+const uuidv1 = require("uuid/v1")
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 
 class Store{
-    constructor(){
-        this.lastId = 0;
-    }
-
     read(){
         return readFileAsync("db/db.json", "utf-8")
     }
     write(note){
-        return writeFileAsync("db/db.json", "utf-8");
+        return writeFileAsync("db/db.json", JSON.stringify(note));
     }
     getNotes(){
         return this.read().then(notes => {
@@ -23,24 +20,25 @@ class Store{
             } catch(err){
                 parsedNotes = [];
             }
+        return parsedNotes;
         });
     }
     
-   addNotes(note){
+   addNote(note){
     const { title, text} = note;
    
    
     if(!title || !text){
-        throw new Error ("Note 'title' and 'text' cannot be blanl");
+        throw new Error ("Note 'title' and 'text' cannot be blank");
     }
 
-    const newNote = { title, text, id: ++this.lastId};
+    const newNote = { title, text, id: uuidv1()};
     return this.getNotes()
     .then(notes => [...notes, newNote])
     .then(updatedNotes => this.write(updatedNotes))
     .then(() => newNote);
     }
-    deleteNotes(id){
+    removeNote(id){
         return this.getNotes()
         .then(notes => notes.filter(notes => note.id !== parseInt(id)))
         .then(filteredNotes => this.write(filteredNotes))
